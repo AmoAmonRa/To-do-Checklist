@@ -90,6 +90,6 @@ You can easily customize the app by modifying:
 - Font family in `styles.css` (font import)
 - Default categories and priorities in `script.js`
 
-## License
+## License.
 
 This project is open source and available under the MIT License.

@@ -575,3 +575,44 @@ body {
   background: #f0f0f0;
   color: var(--dark-color);
 }
+
+/* Undo notification styles */
+.undo-notification {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background-color: var(--dark-color);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.undo-notification.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+#undo-btn {
+  background: transparent;
+  color: var(--accent-color);
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 5px 10px;
+  font-size: 0.95rem;
+  transition: var(--transition);
+  text-transform: uppercase;
+}
+
+#undo-btn:hover {
+  color: #fff;
+  text-shadow: 0 0 8px var(--accent-color);
+}

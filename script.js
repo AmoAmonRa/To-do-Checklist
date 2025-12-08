@@ -6,6 +6,8 @@ const filterBtns = document.querySelectorAll(".filter-btn");
 const totalTasksSpan = document.getElementById("total-tasks");
 const completedTasksSpan = document.getElementById("completed-tasks");
 const todoEmptyState = document.getElementById("todo-empty-state");
+const undoNotification = document.getElementById("undo-notification");
+const undoBtn = document.getElementById("undo-btn");
 
 // Modal Elements
 const editModal = document.getElementById("edit-modal");
@@ -28,6 +30,8 @@ const categorySelect = document.getElementById("category-select");
 let todos = JSON.parse(localStorage.getItem("todos")) || [];
 let currentFilter = "all";
 let currentEditId = null; // Track which todo is being edited
+let lastDeletedTodo = null;
+let undoTimeout = null;
 
 // Initialize the app
 document.addEventListener("DOMContentLoaded", () => {
@@ -66,6 +70,8 @@ document.addEventListener("DOMContentLoaded", () => {
       closeEditModal();
     }
   });
+
+  undoBtn.addEventListener("click", restoreTodo);
 });
 
 // Add a new todo
@@ -127,10 +133,43 @@ function editTodo(id, newText) {
 
 // Delete todo
 function deleteTodo(id) {
-  todos = todos.filter((todo) => todo.id !== id);
-  saveToLocalStorage();
-  renderTodos();
-  updateStats();
+  const todoIndex = todos.findIndex((t) => t.id === id);
+  if (todoIndex > -1) {
+    lastDeletedTodo = {
+      item: todos[todoIndex],
+      index: todoIndex
+    };
+    
+    todos.splice(todoIndex, 1);
+    saveToLocalStorage();
+    renderTodos();
+    updateStats();
+    showUndoNotification();
+  }
+}
+
+function showUndoNotification() {
+  if (undoTimeout) clearTimeout(undoTimeout);
+  
+  undoNotification.classList.add("show");
+  
+  undoTimeout = setTimeout(() => {
+    undoNotification.classList.remove("show");
+    lastDeletedTodo = null;
+  }, 10000);
+}
+
+function restoreTodo() {
+  if (lastDeletedTodo) {
+    todos.splice(lastDeletedTodo.index, 0, lastDeletedTodo.item);
+    saveToLocalStorage();
+    renderTodos();
+    updateStats();
+    
+    undoNotification.classList.remove("show");
+    lastDeletedTodo = null;
+    if (undoTimeout) clearTimeout(undoTimeout);
+  }
 }
 
 // Set todo priority

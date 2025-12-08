@@ -15,6 +15,24 @@
   --font-main: "Poppins", sans-serif;
 }
 
+/* Dark theme variables */
+body.dark-theme {
+  --primary-color: #8b7bff;
+  --secondary-color: #6c63ff;
+  --accent-color: #ff7a95;
+  --success-color: #00e676;
+  --warning-color: #ffbd40;
+  --danger-color: #ff5252;
+  --light-color: #3a3a3a;
+  --dark-color: #e8e8e8;
+  --gray-color: #c8c8c8;
+  --box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+body {
+  transition: var(--transition);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -29,8 +47,53 @@ body {
   padding: 20px;
 }
 
+/* Dark mode body background */
+body.dark-theme {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+/* Theme Toggle Button Styles */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(108, 99, 255, 0.2);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--box-shadow);
+  backdrop-filter: blur(10px);
+  font-size: 1.2rem;
+  color: var(--primary-color);
+}
+
+.theme-toggle:hover {
+  background: var(--primary-color);
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 8px 25px rgba(108, 99, 255, 0.4);
+}
+
+body.dark-theme .theme-toggle {
+  background: rgba(45, 45, 45, 0.9);
+  border: 2px solid rgba(139, 123, 255, 0.2);
+  color: var(--primary-color);
+}
+
+body.dark-theme .theme-toggle:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
 .container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -39,6 +102,205 @@ body {
   text-align: center;
   margin-bottom: 30px;
   padding: 20px 0;
+}
+
+/* Layout - Sidebar and Main Content */
+.app-layout {
+  display: flex;
+  gap: 20px;
+  min-height: 600px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 320px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background: transparent;
+}
+
+.add-todo-section,
+.filters,
+.todo-stats {
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 18px;
+  box-shadow: var(--box-shadow);
+  width: 100%;
+}
+
+/* Dark mode backgrounds */
+body.dark-theme .add-todo-section,
+body.dark-theme .filters,
+body.dark-theme .todo-stats {
+  background: #2a2a2a;
+}
+
+body.dark-theme .todo-list-container,
+body.dark-theme .todo-empty-state,
+body.dark-theme .app-footer {
+  background: #2a2a2a;
+}
+
+body.dark-theme .modal-content {
+  background-color: #2a2a2a;
+}
+
+body.dark-theme .todo-item {
+  border-bottom-color: #404040;
+}
+
+body.dark-theme #todo-input,
+body.dark-theme #priority-select,
+body.dark-theme #category-select,
+body.dark-theme #due-date-input,
+body.dark-theme #edit-input,
+body.dark-theme #edit-priority-select,
+body.dark-theme #edit-category-select,
+body.dark-theme #edit-due-date-input {
+  background: #404040;
+  border-color: #555555;
+  color: var(--dark-color);
+}
+
+body.dark-theme #todo-input:focus,
+body.dark-theme #priority-select:focus,
+body.dark-theme #category-select:focus,
+body.dark-theme #due-date-input:focus,
+body.dark-theme #edit-input:focus,
+body.dark-theme #edit-priority-select:focus,
+body.dark-theme #edit-category-select:focus,
+body.dark-theme #edit-due-date-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(139, 123, 255, 0.2);
+}
+
+body.dark-theme .filter-btn {
+  background: #404040;
+  border-color: #555555;
+  color: var(--dark-color);
+}
+
+body.dark-theme .filter-btn.active,
+body.dark-theme .filter-btn:hover {
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  color: #ffffffff;
+  border-color: var(--primary-color);
+}
+
+body.dark-theme #cancel-edit-btn {
+  background: #404040;
+  color: var(--dark-color);
+}
+
+body.dark-theme .todo-empty-state i {
+  color: #555555;
+}
+
+/* Dark mode modal styles */
+body.dark-theme .modal {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Main content styles */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: calc(100% - 340px);
+}
+
+.todo-list-container {
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 20px;
+  box-shadow: var(--box-shadow);
+  flex: 1;
+  margin-bottom: 20px;
+  min-height: 400px;
+  overflow-y: auto;
+}
+
+.todo-empty-state {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin-bottom: 20px;
+}
+
+.app-footer {
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 15px 20px;
+  box-shadow: var(--box-shadow);
+  text-align: center;
+  color: var(--gray-color);
+  font-size: 0.9rem;
+}
+
+/* Fix sidebar input layout */
+.add-todo-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.todo-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#todo-input {
+  width: 100%;
+  padding: 15px 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 50px;
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition);
+  background: #f8f9fa;
+}
+
+#priority-select,
+#category-select,
+#due-date-input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 50px;
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition);
+  background: #f8f9fa;
+}
+
+#add-todo-btn {
+  width: 100%;
+  background: linear-gradient(
+    45deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+  justify-content: center;
 }
 
 .app-header h1 {
@@ -55,21 +317,17 @@ body {
   font-size: 1.1rem;
 }
 
-/* Controls section */
-.app-controls {
-  background: white;
-  border-radius: var(--border-radius);
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: var(--box-shadow);
+/* Add todo section - Sidebar specific styles */
+.add-todo-section {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.add-todo-section {
+.todo-input-group {
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  gap: 12px;
 }
 
 #todo-input {
@@ -97,7 +355,7 @@ body {
   color: white;
   border: none;
   border-radius: 50px;
-  padding: 0 25px;
+  padding: 12px 25px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -106,6 +364,8 @@ body {
   align-items: center;
   gap: 8px;
   box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+  min-width: 120px;
+  justify-content: center;
 }
 
 #add-todo-btn:hover {
@@ -113,7 +373,28 @@ body {
   box-shadow: 0 6px 20px rgba(108, 99, 255, 0.4);
 }
 
-/* Filters */
+/* Select and date input styles */
+#priority-select,
+#category-select,
+#due-date-input {
+  padding: 10px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 50px;
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition);
+  background: #f8f9fa;
+  flex: 1;
+}
+
+#priority-select:focus,
+#category-select:focus,
+#due-date-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+}
+
+/* Filters - Sidebar specific styles */
 .filters {
   display: flex;
   gap: 10px;
@@ -144,15 +425,11 @@ body {
   border-color: var(--primary-color);
 }
 
-/* Stats */
+/* Stats - Sidebar specific styles */
 .todo-stats {
   display: flex;
-  justify-content: space-between;
-  background: white;
-  border-radius: var(--border-radius);
-  padding: 15px 20px;
-  margin-bottom: 20px;
-  box-shadow: var(--box-shadow);
+  flex-direction: column;
+  gap: 8px;
   font-size: 0.9rem;
   color: var(--gray-color);
 }
@@ -251,6 +528,7 @@ body {
   padding: 3px 8px;
   border-radius: 20px;
   font-size: 0.8rem;
+  white-space: nowrap;
 }
 
 .priority-high {
@@ -275,6 +553,7 @@ body {
   background: rgba(0, 0, 0, 0.05);
   padding: 3px 8px;
   border-radius: 20px;
+  white-space: nowrap;
 }
 
 .todo-category {
@@ -289,6 +568,16 @@ body {
   font-size: 0.8rem;
   margin-left: 10px;
   font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Ensure proper alignment of todo actions */
+.todo-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: flex-end;
 }
 
 /* Empty state */
@@ -357,7 +646,23 @@ body {
     font-size: 2rem;
   }
 
-  .app-controls {
+  .app-layout {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .sidebar {
+    width: 100%;
+    order: 2;
+  }
+
+  .main-content {
+    order: 1;
+  }
+
+  .add-todo-section,
+  .filters,
+  .todo-stats {
     padding: 15px;
   }
 
@@ -370,10 +675,25 @@ body {
     justify-content: center;
   }
 
+  .todo-input-group {
+    flex-direction: column;
+  }
+
   .todo-stats {
     flex-direction: column;
     gap: 10px;
     text-align: center;
+  }
+
+  .filters {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .filter-btn {
+    flex: 1;
+    min-width: 100px;
   }
 
   .todo-item {
@@ -391,20 +711,29 @@ body {
     justify-content: flex-end;
   }
 
-  .filters {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-
-  .filter-btn {
-    flex: 1;
-    min-width: 100px;
+  /* Theme toggle responsive styles */
+  .theme-toggle {
+    top: 15px;
+    right: 15px;
+    width: 45px;
+    height: 45px;
+    font-size: 1.1rem;
   }
 }
 
 @media (max-width: 480px) {
   .app-header h1 {
     font-size: 1.8rem;
+  }
+
+  .app-layout {
+    gap: 10px;
+  }
+
+  .add-todo-section,
+  .filters,
+  .todo-stats {
+    padding: 12px;
   }
 
   .todo-item {
@@ -431,3 +760,151 @@ body {
   background: rgba(108, 99, 255, 0.05);
   border-radius: var(--border-radius);
 }
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  border-radius: var(--border-radius);
+  width: 80%;
+  max-width: 500px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  position: relative;
+  animation: modalOpen 0.3s ease;
+}
+
+/* Modal input styles */
+#edit-input {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 15px 0;
+  border: 2px solid #e0e0e0;
+  border-radius: 50px;
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition);
+  background: #f8f9fa;
+}
+
+#edit-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+}
+
+/* Modal input group styles */
+.todo-edit-input-group {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+#edit-priority-select,
+#edit-category-select,
+#edit-due-date-input {
+  padding: 10px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 50px;
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition);
+  background: #f8f9fa;
+  flex: 1;
+}
+
+#edit-priority-select:focus,
+#edit-category-select:focus,
+#edit-due-date-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+}
+
+/* Modal actions */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+#save-edit-btn,
+#cancel-edit-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition);
+  background: #f8f9fa;
+  color: var(--dark-color);
+}
+
+#save-edit-btn {
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  color: white;
+}
+
+#cancel-edit-btn {
+  background: #f0f0f0;
+  color: var(--dark-color);
+}
+
+/* Undo notification styles */
+.undo-notification {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background-color: var(--dark-color);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+body.dark-theme .undo-notification {
+    color: var(--light-color);
+}
+.undo-notification.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+#undo-btn {
+  background: transparent;
+  color: var(--accent-color);
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 5px 10px;
+  font-size: 0.95rem;
+  transition: var(--transition);
+  text-transform: uppercase;
+}
+
+#undo-btn:hover {
+  color: #fff;
+  text-shadow: 0 0 8px var(--accent-color);
+}
+
+body.dark-theme #undo-btn:hover {
+  color: #e70606;
+  text-shadow: 0 0 8px var(--accent-color);
+}
+

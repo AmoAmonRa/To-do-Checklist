@@ -1,3 +1,7 @@
+/* Theme Toggle Elements */
+const themeToggle = document.getElementById("theme-toggle");
+const themeIcon = themeToggle.querySelector("i");
+
 // DOM Elements
 const todoInput = document.getElementById("todo-input");
 const addTodoBtn = document.getElementById("add-todo-btn");
@@ -6,13 +10,73 @@ const filterBtns = document.querySelectorAll(".filter-btn");
 const totalTasksSpan = document.getElementById("total-tasks");
 const completedTasksSpan = document.getElementById("completed-tasks");
 const todoEmptyState = document.getElementById("todo-empty-state");
+const undoNotification = document.getElementById("undo-notification");
+const undoBtn = document.getElementById("undo-btn");
+
+// Modal Elements
+const editModal = document.getElementById("edit-modal");
+const editInput = document.getElementById("edit-input");
+const saveEditBtn = document.getElementById("save-edit-btn");
+const cancelEditBtn = document.getElementById("cancel-edit-btn");
+const closeModal = document.querySelector(".close");
+
+// New elements for edit modal
+const editPrioritySelect = document.getElementById("edit-priority-select");
+const editDueDateInput = document.getElementById("edit-due-date-input");
+const editCategorySelect = document.getElementById("edit-category-select");
+
+// New elements for priority, category and due date
+const prioritySelect = document.getElementById("priority-select");
+const dueDateInput = document.getElementById("due-date-input");
+const categorySelect = document.getElementById("category-select");
 
 // State
 let todos = JSON.parse(localStorage.getItem("todos")) || [];
 let currentFilter = "all";
+let currentEditId = null; // Track which todo is being edited
+let lastDeletedTodo = null;
+let undoTimeout = null;
+
+// Theme Management Functions
+function initTheme() {
+  // Load saved theme from localStorage or default to light theme
+  const savedTheme = localStorage.getItem("theme") || "light";
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark-theme");
+    themeIcon.className = "fas fa-sun";
+    themeToggle.title = "Switch to light theme";
+  } else {
+    document.body.classList.remove("dark-theme");
+    themeIcon.className = "fas fa-moon";
+    themeToggle.title = "Switch to dark theme";
+  }
+}
+
+function toggleTheme() {
+  const body = document.body;
+  const isDark = body.classList.toggle("dark-theme");
+  
+  if (isDark) {
+    themeIcon.className = "fas fa-sun";
+    themeToggle.title = "Switch to light theme";
+    localStorage.setItem("theme", "dark");
+  } else {
+    themeIcon.className = "fas fa-moon";
+    themeToggle.title = "Switch to dark theme";
+    localStorage.setItem("theme", "light");
+  }
+}
 
 // Initialize the app
 document.addEventListener("DOMContentLoaded", () => {
+  // Set minimum date for due date input to today
+  const today = new Date().toISOString().split('T')[0];
+  dueDateInput.min = today;
+  editDueDateInput.min = today;
+  
+  // Initialize theme
+  initTheme();
+  
   renderTodos();
   updateStats();
 
@@ -21,6 +85,9 @@ document.addEventListener("DOMContentLoaded", () => {
   todoInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") addTodo();
   });
+
+  // Theme toggle event listener
+  themeToggle.addEventListener("click", toggleTheme);
 
   filterBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -33,6 +100,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Drag and drop functionality
   setupDragAndDrop();
+
+  // Modal event listeners
+  saveEditBtn.addEventListener("click", saveEdit);
+  cancelEditBtn.addEventListener("click", closeEditModal);
+  closeModal.addEventListener("click", closeEditModal);
+  window.addEventListener("click", (e) => {
+    if (e.target === editModal) {
+      closeEditModal();
+    }
+  });
+
+  undoBtn.addEventListener("click", restoreTodo);
 });
 
 // Add a new todo
@@ -44,9 +123,9 @@ function addTodo() {
     id: Date.now(),
     text,
     completed: false,
-    priority: "medium", // high, medium, low
-    category: "personal", // work, personal, shopping, health
-    dueDate: null,
+    priority: prioritySelect.value, // high, medium, low
+    category: categorySelect.value, // work, personal, shopping, health
+    dueDate: dueDateInput.value || null,
     createdAt: new Date().toISOString(),
   };
 
@@ -57,6 +136,9 @@ function addTodo() {
 
   // Clear input and focus
   todoInput.value = "";
+  prioritySelect.value = "medium";
+  categorySelect.value = "personal";
+  dueDateInput.value = "";
   todoInput.focus();
 }
 
@@ -91,10 +173,43 @@ function editTodo(id, newText) {
 
 // Delete todo
 function deleteTodo(id) {
-  todos = todos.filter((todo) => todo.id !== id);
-  saveToLocalStorage();
-  renderTodos();
-  updateStats();
+  const todoIndex = todos.findIndex((t) => t.id === id);
+  if (todoIndex > -1) {
+    lastDeletedTodo = {
+      item: todos[todoIndex],
+      index: todoIndex
+    };
+    
+    todos.splice(todoIndex, 1);
+    saveToLocalStorage();
+    renderTodos();
+    updateStats();
+    showUndoNotification();
+  }
+}
+
+function showUndoNotification() {
+  if (undoTimeout) clearTimeout(undoTimeout);
+  
+  undoNotification.classList.add("show");
+  
+  undoTimeout = setTimeout(() => {
+    undoNotification.classList.remove("show");
+    lastDeletedTodo = null;
+  }, 10000);
+}
+
+function restoreTodo() {
+  if (lastDeletedTodo) {
+    todos.splice(lastDeletedTodo.index, 0, lastDeletedTodo.item);
+    saveToLocalStorage();
+    renderTodos();
+    updateStats();
+    
+    undoNotification.classList.remove("show");
+    lastDeletedTodo = null;
+    if (undoTimeout) clearTimeout(undoTimeout);
+  }
 }
 
 // Set todo priority
@@ -168,6 +283,7 @@ function renderTodos() {
     const todoItem = document.createElement("li");
     todoItem.className = `todo-item ${todo.completed ? "completed" : ""}`;
     todoItem.dataset.id = todo.id;
+    todoItem.draggable = true; // Add draggable attribute
 
     // Priority indicator
     let priorityClass = "";
@@ -234,23 +350,61 @@ function renderTodos() {
     checkbox.addEventListener("change", () => toggleTodo(todo.id));
     deleteBtn.addEventListener("click", () => deleteTodo(todo.id));
 
-    editBtn.addEventListener("click", () => {
-      const newText = prompt("Edit your task:", todo.text);
-      if (newText !== null) {
-        editTodo(todo.id, newText);
-      }
-    });
+    editBtn.addEventListener("click", () => openEditModal(todo.id, todo.text));
 
     // Double-click to edit
-    todoText.addEventListener("dblclick", () => {
-      const newText = prompt("Edit your task:", todo.text);
-      if (newText !== null) {
-        editTodo(todo.id, newText);
-      }
-    });
+    todoText.addEventListener("dblclick", () => openEditModal(todo.id, todo.text));
 
     todoList.appendChild(todoItem);
   });
+}
+
+// Open edit modal
+function openEditModal(id, text) {
+  currentEditId = id;
+  editInput.value = text;
+  
+  // Find the todo item to get its priority, category and due date
+  const todo = todos.find(t => t.id === id);
+  if (todo) {
+    editPrioritySelect.value = todo.priority;
+    editCategorySelect.value = todo.category;
+    editDueDateInput.value = todo.dueDate || "";
+  }
+  
+  editModal.style.display = "block";
+  editInput.focus();
+}
+
+// Save edited todo
+function saveEdit() {
+  if (currentEditId !== null) {
+    const newText = editInput.value.trim();
+    if (newText !== "") {
+      todos = todos.map((todo) => {
+        if (todo.id === currentEditId) {
+          return { 
+            ...todo, 
+            text: newText.trim(),
+            priority: editPrioritySelect.value,
+            category: editCategorySelect.value,
+            dueDate: editDueDateInput.value || null
+          };
+        }
+        return todo;
+      });
+      
+      saveToLocalStorage();
+      renderTodos();
+      closeEditModal();
+    }
+  }
+}
+
+// Close edit modal
+function closeEditModal() {
+  editModal.style.display = "none";
+  currentEditId = null;
 }
 
 // Update statistics
@@ -278,6 +432,7 @@ function setupDragAndDrop() {
       draggedItem = e.target;
       e.target.classList.add("dragging");
       e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", e.target.dataset.id);
     }
   });
 
@@ -353,10 +508,16 @@ function updateTodoOrder() {
   const todoItems = Array.from(todoList.querySelectorAll(".todo-item"));
   const newOrder = todoItems.map((item) => parseInt(item.dataset.id));
 
-  todos = todos.sort((a, b) => {
-    return newOrder.indexOf(a.id) - newOrder.indexOf(b.id);
+  // Create a new array with todos in the correct order
+  const orderedTodos = [];
+  newOrder.forEach(id => {
+    const todo = todos.find(t => t.id === id);
+    if (todo) {
+      orderedTodos.push(todo);
+    }
   });
 
+  todos = orderedTodos;
   saveToLocalStorage();
 }
 

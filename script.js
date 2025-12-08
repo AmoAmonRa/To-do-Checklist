@@ -204,6 +204,7 @@ function renderTodos() {
     const todoItem = document.createElement("li");
     todoItem.className = `todo-item ${todo.completed ? "completed" : ""}`;
     todoItem.dataset.id = todo.id;
+    todoItem.draggable = true; // Add draggable attribute
 
     // Priority indicator
     let priorityClass = "";
@@ -352,6 +353,7 @@ function setupDragAndDrop() {
       draggedItem = e.target;
       e.target.classList.add("dragging");
       e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", e.target.dataset.id);
     }
   });
 
@@ -427,10 +429,16 @@ function updateTodoOrder() {
   const todoItems = Array.from(todoList.querySelectorAll(".todo-item"));
   const newOrder = todoItems.map((item) => parseInt(item.dataset.id));
 
-  todos = todos.sort((a, b) => {
-    return newOrder.indexOf(a.id) - newOrder.indexOf(b.id);
+  // Create a new array with todos in the correct order
+  const orderedTodos = [];
+  newOrder.forEach(id => {
+    const todo = todos.find(t => t.id === id);
+    if (todo) {
+      orderedTodos.push(todo);
+    }
   });
 
+  todos = orderedTodos;
   saveToLocalStorage();
 }
 

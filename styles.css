@@ -878,7 +878,9 @@ body.dark-theme .modal {
   opacity: 0;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-
+body.dark-theme .undo-notification {
+    color: var(--light-color);
+}
 .undo-notification.show {
   transform: translateX(-50%) translateY(0);
   opacity: 1;
@@ -900,3 +902,9 @@ body.dark-theme .modal {
   color: #fff;
   text-shadow: 0 0 8px var(--accent-color);
 }
+
+body.dark-theme #undo-btn:hover {
+  color: #e70606;
+  text-shadow: 0 0 8px var(--accent-color);
+}
+

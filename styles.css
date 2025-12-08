@@ -69,6 +69,12 @@ body {
 
 .add-todo-section {
   display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.todo-input-group {
+  display: flex;
   gap: 10px;
 }
 
@@ -97,7 +103,7 @@ body {
   color: white;
   border: none;
   border-radius: 50px;
-  padding: 0 25px;
+  padding: 12px 25px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -106,11 +112,34 @@ body {
   align-items: center;
   gap: 8px;
   box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+  min-width: 120px;
+  justify-content: center;
 }
 
 #add-todo-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(108, 99, 255, 0.4);
+}
+
+/* Select and date input styles */
+#priority-select,
+#category-select,
+#due-date-input {
+  padding: 10px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 50px;
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition);
+  background: #f8f9fa;
+  flex: 1;
+}
+
+#priority-select:focus,
+#category-select:focus,
+#due-date-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
 }
 
 /* Filters */
@@ -251,6 +280,7 @@ body {
   padding: 3px 8px;
   border-radius: 20px;
   font-size: 0.8rem;
+  white-space: nowrap;
 }
 
 .priority-high {
@@ -275,6 +305,7 @@ body {
   background: rgba(0, 0, 0, 0.05);
   padding: 3px 8px;
   border-radius: 20px;
+  white-space: nowrap;
 }
 
 .todo-category {
@@ -289,6 +320,16 @@ body {
   font-size: 0.8rem;
   margin-left: 10px;
   font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Ensure proper alignment of todo actions */
+.todo-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: flex-end;
 }
 
 /* Empty state */
@@ -370,6 +411,10 @@ body {
     justify-content: center;
   }
 
+  .todo-input-group {
+    flex-direction: column;
+  }
+
   .todo-stats {
     flex-direction: column;
     gap: 10px;
@@ -430,4 +475,103 @@ body {
 .todo-item.drag-over {
   background: rgba(108, 99, 255, 0.05);
   border-radius: var(--border-radius);
+}
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  border-radius: var(--border-radius);
+  width: 80%;
+  max-width: 500px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  position: relative;
+  animation: modalOpen 0.3s ease;
+}
+
+/* Modal input styles */
+#edit-input {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 15px 0;
+  border: 2px solid #e0e0e0;
+  border-radius: 50px;
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition);
+  background: #f8f9fa;
+}
+
+#edit-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+}
+
+/* Modal input group styles */
+.todo-edit-input-group {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+#edit-priority-select,
+#edit-category-select,
+#edit-due-date-input {
+  padding: 10px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 50px;
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition);
+  background: #f8f9fa;
+  flex: 1;
+}
+
+#edit-priority-select:focus,
+#edit-category-select:focus,
+#edit-due-date-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+}
+
+/* Modal actions */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+#save-edit-btn,
+#cancel-edit-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition);
+  background: #f8f9fa;
+  color: var(--dark-color);
+}
+
+#save-edit-btn {
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  color: white;
+}
+
+#cancel-edit-btn {
+  background: #f0f0f0;
+  color: var(--dark-color);
 }

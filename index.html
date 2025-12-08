@@ -21,52 +21,62 @@
         <p>Organize your life in style</p>
       </header>
 
-      <div class="app-controls">
-        <div class="add-todo-section">
-          <input
-            type="text"
-            id="todo-input"
-            placeholder="What needs to be done?"
-          />
-          <div class="todo-input-group">
-            <select id="priority-select">
-              <option value="low">Low</option>
-              <option value="medium" selected>Medium</option>
-              <option value="high">High</option>
-            </select>
-            <select id="category-select">
-              <option value="personal">Personal</option>
-              <option value="work">Work</option>
-              <option value="shopping">Shopping</option>
-              <option value="health">Health</option>
-            </select>
-            <input type="date" id="due-date-input" />
+      <div class="app-layout">
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <div class="add-todo-section">
+            <input
+              type="text"
+              id="todo-input"
+              placeholder="What needs to be done?"
+            />
+            <div class="todo-input-group">
+              <select id="priority-select">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+              </select>
+              <select id="category-select">
+                <option value="personal">Personal</option>
+                <option value="work">Work</option>
+                <option value="shopping">Shopping</option>
+                <option value="health">Health</option>
+              </select>
+              <input type="date" id="due-date-input" />
+            </div>
+            <button id="add-todo-btn">
+              <i class="fas fa-plus"></i> Add Task
+            </button>
           </div>
-          <button id="add-todo-btn">
-            <i class="fas fa-plus"></i> Add Task
-          </button>
+
+          <div class="filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="active">Active</button>
+            <button class="filter-btn" data-filter="completed">Completed</button>
+          </div>
+
+          <div class="todo-stats">
+            <span id="total-tasks">Total: 0 tasks</span>
+            <span id="completed-tasks">Completed: 0</span>
+          </div>
         </div>
 
-        <div class="filters">
-          <button class="filter-btn active" data-filter="all">All</button>
-          <button class="filter-btn" data-filter="active">Active</button>
-          <button class="filter-btn" data-filter="completed">Completed</button>
+        <!-- Main Content -->
+        <div class="main-content">
+          <div class="todo-list-container">
+            <ul id="todo-list" class="todo-list"></ul>
+          </div>
+
+          <div class="todo-empty-state" id="todo-empty-state">
+            <i class="fas fa-clipboard-list fa-3x"></i>
+            <h3>No tasks yet</h3>
+            <p>Add your first task to get started!</p>
+          </div>
+
+          <div class="app-footer">
+            <p>Double-click to edit a task • Drag to reorder</p>
+          </div>
         </div>
-      </div>
-
-      <div class="todo-stats">
-        <span id="total-tasks">Total: 0 tasks</span>
-        <span id="completed-tasks">Completed: 0</span>
-      </div>
-
-      <div class="todo-list-container">
-        <ul id="todo-list" class="todo-list"></ul>
-      </div>
-
-      <div class="todo-empty-state" id="todo-empty-state">
-        <i class="fas fa-clipboard-list fa-3x"></i>
-        <h3>No tasks yet</h3>
-        <p>Add your first task to get started!</p>
       </div>
 
       <!-- Edit Modal -->
@@ -96,16 +106,12 @@
         </div>
       </div>
 
-      <div class="app-footer">
-        <p>Double-click to edit a task • Drag to reorder</p>
+      <div id="undo-notification" class="undo-notification">
+        <span>Task deleted</span>
+        <button id="undo-btn">Undo</button>
       </div>
-    </div>
 
-    <div id="undo-notification" class="undo-notification">
-      <span>Task deleted</span>
-      <button id="undo-btn">Undo</button>
+      <script src="script.js"></script>
     </div>
-
-    <script src="script.js"></script>
   </body>
 </html>
